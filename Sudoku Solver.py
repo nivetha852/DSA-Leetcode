@@ -1,0 +1,38 @@
+class Solution(object):
+    def solveSudoku(self, board):
+        """
+        :type board: List[List[str]]
+        :rtype: None Do not return anything, modify board in-place instead.
+        """
+        rows = [set()for _ in range(9)]
+        cols = [set()for _ in range(9)]
+        boxes = [set() for _ in range(9)]
+        empties=[]
+        for r in range(9):
+            for c in range(9):
+                val = board[r][c]
+                if val =='.':
+                    empties.append((r,c))
+                else:
+                    rows[r].add (val)
+                    cols[c].add(val)
+                    boxes [r//3*3+c//3].add(val)
+        def backtrack(idx):
+            if idx == len(empties):
+                return True
+            row,col=empties[idx]
+            b = (row//3)*3+col//3
+            for num in "123456789":
+                if num not in rows[row]and num not in cols[col] and num not in boxes[b]:
+                    board[row][col]= num
+                    rows[row].add(num)
+                    cols[col].add(num)
+                    boxes[b].add(num)
+                    if backtrack(idx+1):
+                            return True
+                    board[row][col]="."
+                    rows[row].remove(num)
+                    cols[col].remove(num)
+                    boxes[b].remove(num)
+            return False
+        backtrack(0)
